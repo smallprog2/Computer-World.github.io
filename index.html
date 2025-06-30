@@ -110,7 +110,62 @@
       <h3>حباره Canon 719</h3>
     </div>
   </section>
+<!-- مراجعات العملاء -->
+<section id="reviews" style="margin: 40px auto; padding: 20px; background-color: #f8f9fa; border-radius: 10px; max-width: 700px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+  <h2 style="text-align: center; color: #333;">مراجعات المستخدمين</h2>
 
+  <form id="reviewForm" style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+    <input type="text" id="name" placeholder="اسمك" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px;" />
+    
+    <select id="rating" required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+      <option value="">اختر تقييمًا</option>
+      <option value="5">⭐⭐⭐⭐⭐</option>
+      <option value="4">⭐⭐⭐⭐</option>
+      <option value="3">⭐⭐⭐</option>
+      <option value="2">⭐⭐</option>
+      <option value="1">⭐</option>
+    </select>
+
+    <textarea id="comment" placeholder="اكتب تعليقك..." required style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; resize: vertical;"></textarea>
+
+    <button type="submit" style="padding: 10px; background-color: #007bff; color: #fff; border: none; border-radius: 5px; cursor: pointer;">إرسال المراجعة</button>
+  </form>
+
+  <div id="reviewsList" style="margin-top: 30px;"></div>
+</section>
+
+<script>
+  const form = document.getElementById('reviewForm');
+  const reviewsList = document.getElementById('reviewsList');
+
+  function loadReviews() {
+    const reviews = JSON.parse(localStorage.getItem('reviews_computer_world') || '[]');
+    reviewsList.innerHTML = reviews.map(r => `
+      <div style="background-color: #ffffff; padding: 15px; margin-top: 10px; border-radius: 5px; border: 1px solid #ddd;">
+        <strong style="color: #007bff;">${r.name}</strong> - ${'⭐'.repeat(r.rating)}
+        <p style="margin-top: 5px;">${r.comment}</p>
+      </div>
+    `).join('');
+  }
+
+  form.onsubmit = function(e) {
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    const rating = parseInt(document.getElementById('rating').value);
+    const comment = document.getElementById('comment').value.trim();
+
+    if (!name || !rating || !comment) return;
+
+    const newReview = { name, rating, comment };
+    const reviews = JSON.parse(localStorage.getItem('reviews_computer_world') || '[]');
+    reviews.push(newReview);
+    localStorage.setItem('reviews_computer_world', JSON.stringify(reviews));
+    form.reset();
+    loadReviews();
+  }
+
+  loadReviews();
+</script>
   <footer>
     <img src="Dev12.png">
     <p>تم تطوير الموقع بواسطة شركة Dev12</p>
